@@ -36,56 +36,49 @@ export function ActivityDetail() {
   const fetchActivity = async () => {
     setLoading(true)
     try {
-      if (id) {
-        const data = await blink.db.activities.get(id)
-        if (data) {
-          setActivity({
-            ...data,
-            images: JSON.parse(data.images || '[]'),
-            rating: 4.8 // Mock rating for now
-          })
-          setLoading(false)
-          return
+      // Mock data for testing phase
+      const mockActivities = {
+        '1': {
+          id: '1', 
+          title: 'Excursion en pirogue traditionnelle', 
+          location: 'Dakar, Sénégal', 
+          price: 45000, 
+          rating: 4.8, 
+          images: ['https://images.unsplash.com/photo-1735293221044-60ac95fb197f?q=80&w=800'],
+          duration: '4h',
+          type: 'Excursion bateau',
+          description: 'Une balade authentique le long de la côte dakaroise.'
+        },
+        '2': {
+          id: '2', 
+          title: 'Safari authentique en brousse', 
+          location: 'Kenya', 
+          price: 120000, 
+          rating: 4.9, 
+          images: ['https://images.unsplash.com/photo-1758881534566-fd5c54d7e7c8?q=80&w=800'],
+          duration: 'Journée',
+          type: 'Safari',
+          description: 'Observez la faune sauvage dans son habitat naturel.'
+        },
+        '3': {
+          id: '3', 
+          title: 'Tour des îles au coucher du soleil', 
+          location: 'Sénégal', 
+          price: 35000, 
+          rating: 4.7, 
+          images: ['https://images.unsplash.com/photo-1630510590519-0976dc4cc250?q=80&w=800'],
+          duration: '3h',
+          type: 'Excursion bateau',
+          description: 'Profitez d\'un moment magique sur l\'eau.'
         }
       }
       
-      // Mock data for MVP if not in DB
-      const mockActivity: Activity = {
-        id: id || '1',
-        title: 'Excursion en pirogue traditionnelle',
-        description: 'Embarquez pour une aventure inoubliable sur les eaux cristallines de Dakar. Nos guides locaux expérimentés vous feront découvrir des paysages époustouflants, des villages de pêcheurs authentiques et des plages secrètes accessibles uniquement par bateau. Cette excursion inclut une dégustation de produits locaux sur une île isolée.\n\nPoints forts :\n- Navigation en pirogue traditionnelle motorisée\n- Guide local francophone et anglophone\n- Arrêt baignade dans des eaux turquoises\n- Dégustation de poissons grillés (optionnel)',
-        type: 'Excursion bateau',
-        price: 45,
-        duration: '4h',
-        location: 'Dakar, Sénégal',
-        images: [
-          'https://images.unsplash.com/photo-1735293221044-60ac95fb197f?q=80&w=1200',
-          'https://images.unsplash.com/photo-1711802536786-149a0d0c5879?q=80&w=1200',
-          'https://images.unsplash.com/photo-1630510590519-0976dc4cc250?q=80&w=1200'
-        ],
-        rating: 4.8,
-        guideId: 'guide_1'
+      const data = mockActivities[id as keyof typeof mockActivities]
+      if (data) {
+        setActivity(data)
       }
-      setActivity(mockActivity)
     } catch (error) {
-      // Fallback to mock data when DB is unavailable or user is unauthenticated
-      const mockActivity: Activity = {
-        id: id || '1',
-        title: 'Excursion en pirogue traditionnelle',
-        description: 'Embarquez pour une aventure inoubliable sur les eaux cristallines de Dakar. Nos guides locaux expérimentés vous feront découvrir des paysages époustouflants, des villages de pêcheurs authentiques et des plages secrètes accessibles uniquement par bateau.',
-        type: 'Excursion bateau',
-        price: 45,
-        duration: '4h',
-        location: 'Dakar, Sénégal',
-        images: [
-          'https://images.unsplash.com/photo-1735293221044-60ac95fb197f?q=80&w=1200',
-          'https://images.unsplash.com/photo-1711802536786-149a0d0c5879?q=80&w=1200',
-          'https://images.unsplash.com/photo-1630510590519-0976dc4cc250?q=80&w=1200'
-        ],
-        rating: 4.8,
-        guideId: 'guide_1'
-      }
-      setActivity(mockActivity)
+      console.error('Error fetching activity:', error)
     } finally {
       setLoading(false)
     }
@@ -103,7 +96,8 @@ export function ActivityDetail() {
     }
 
     try {
-      const booking = await blink.db.bookings.create({
+      // Mock booking for testing phase
+      console.log('Mock booking:', {
         activityId: activity!.id,
         travelerId: user!.id,
         date: bookingDate,
@@ -111,8 +105,7 @@ export function ActivityDetail() {
         status: 'pending',
         totalPrice: activity!.price * participants
       })
-      toast.success('Demande de réservation envoyée !')
-      // Redirect or show success UI
+      toast.success('Demande de réservation envoyée ! (Mode test)')
     } catch (error) {
       toast.error('Erreur lors de la réservation')
       console.error(error)

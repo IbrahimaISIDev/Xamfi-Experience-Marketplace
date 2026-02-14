@@ -34,17 +34,8 @@ export function Marketplace() {
   const fetchActivities = async () => {
     setLoading(true)
     try {
-      // For MVP, we'll fetch from DB and supplement with mock if empty
-      const results = await blink.db.activities.list()
-      if (results.length > 0) {
-        setActivities(results.map(r => ({
-          ...r,
-          images: JSON.parse(r.images || '[]'),
-          rating: 4.5 + Math.random() * 0.5 // Mock rating
-        })))
-      } else {
-        // Fallback to mock data for presentation
-        setActivities([
+      // Mock data for testing phase
+      setActivities([
           { 
             id: '1', 
             title: 'Excursion en pirogue traditionnelle', 
@@ -101,16 +92,8 @@ export function Marketplace() {
             description: 'Explorez les fonds marins exceptionnels de l\'Océan Indien.'
           },
         ])
-      }
     } catch (error) {
-      // Fallback to mock data when DB is unavailable or user is unauthenticated
-      setActivities([
-        { id: '1', title: 'Excursion en pirogue traditionnelle', location: 'Dakar, Sénégal', price: 45000, rating: 4.8, images: ['https://images.unsplash.com/photo-1735293221044-60ac95fb197f?q=80&w=800'], duration: '4h', type: 'Excursion bateau', description: 'Une balade authentique le long de la côte dakaroise.' },
-        { id: '2', title: 'Safari authentique en brousse', location: 'Kenya', price: 120000, rating: 4.9, images: ['https://images.unsplash.com/photo-1758881534566-fd5c54d7e7c8?q=80&w=800'], duration: 'Journée', type: 'Safari', description: 'Observez la faune sauvage dans son habitat naturel.' },
-        { id: '3', title: 'Tour des îles au coucher du soleil', location: 'Sénégal', price: 35000, rating: 4.7, images: ['https://images.unsplash.com/photo-1630510590519-0976dc4cc250?q=80&w=800'], duration: '3h', type: 'Excursion bateau', description: 'Profitez d\'un moment magique sur l\'eau.' },
-        { id: '4', title: 'Visite historique de Gorée', location: 'Dakar, Sénégal', price: 25000, rating: 4.9, images: ['https://images.unsplash.com/photo-1759252973832-617895b7ef4d?q=80&w=800'], duration: '5h', type: 'Culturel', description: 'Découvrez l\'histoire poignante de l\'île de Gorée.' },
-        { id: '5', title: 'Plongée dans les récifs coralliens', location: 'Mombasa, Kenya', price: 80000, rating: 4.6, images: ['https://images.unsplash.com/photo-1711802536786-149a0d0c5879?q=80&w=800'], duration: '4h', type: 'Plongée', description: 'Explorez les fonds marins exceptionnels de l\'Océan Indien.' },
-      ])
+      console.error('Error loading activities:', error)
     } finally {
       setLoading(false)
     }

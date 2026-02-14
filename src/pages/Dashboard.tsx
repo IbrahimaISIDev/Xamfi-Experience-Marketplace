@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Calendar, Clock, MapPin, MessageSquare, Star, Settings, Shield, User, CreditCard } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { blink } from '../lib/blink'
 import { toast } from 'react-hot-toast'
 
@@ -24,25 +25,27 @@ export function Dashboard() {
   const fetchUserData = async () => {
     setLoading(true)
     try {
-      const profileData = await blink.db.profiles.get(user!.id)
-      if (profileData) {
-        setProfile(profileData)
-        setEditEditForm({ displayName: profileData.displayName || '', role: profileData.role || 'traveler' })
-      } else {
-        // Create initial profile if not exists
-        const newProfile = await blink.db.profiles.create({
-          userId: user!.id,
-          displayName: user!.email?.split('@')[0] || 'Voyageur',
-          role: 'traveler'
-        })
-        setProfile(newProfile)
-        setEditEditForm({ displayName: newProfile.displayName, role: newProfile.role })
+      // Mock data for testing phase
+      const mockProfile = {
+        userId: user!.id,
+        displayName: user!.email?.split('@')[0] || 'Voyageur',
+        role: 'traveler'
       }
-
-      const bookingsData = await blink.db.bookings.list({
-        where: { travelerId: user!.id }
-      })
-      setBookings(bookingsData)
+      setProfile(mockProfile)
+      setEditEditForm({ displayName: mockProfile.displayName, role: mockProfile.role })
+      
+      // Mock bookings
+      const mockBookings = [
+        {
+          id: '1',
+          activityId: '1',
+          activityTitle: 'Excursion en pirogue traditionnelle',
+          date: '2024-03-15',
+          status: 'confirmed',
+          totalPrice: 45000
+        }
+      ]
+      setBookings(mockBookings)
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
     } finally {
@@ -52,15 +55,22 @@ export function Dashboard() {
 
   const handleUpdateProfile = async () => {
     try {
-      const updated = await blink.db.profiles.update(user!.id, {
+      // Mock profile update for testing phase
+      console.log('Mock profile update:', {
+        userId: user!.id,
         displayName: editForm.displayName,
         role: editForm.role
       })
-      setProfile(updated)
+      setProfile({
+        userId: user!.id,
+        displayName: editForm.displayName,
+        role: editForm.role
+      })
       setIsEditing(false)
-      toast.success('Profil mis à jour !')
+      toast.success('Profil mis à jour ! (Mode test)')
     } catch (error) {
       toast.error('Erreur lors de la mise à jour')
+      console.error(error)
     }
   }
 
