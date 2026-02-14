@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { blink } from '../lib/blink'
+import { useAuth } from '../hooks/useAuth'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react'
 
 export function LoginPage() {
     const navigate = useNavigate()
+    const { login } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -18,12 +19,17 @@ export function LoginPage() {
         e.preventDefault()
         setLoading(true)
         try {
-            await blink.auth.signInWithEmail(email, password)
-            toast.success('Successfully logged in')
-            navigate('/dashboard')
+            // Mock login - just accept any email/password for testing
+            if (email && password) {
+                login()
+                toast.success('Connecté avec succès !')
+                navigate('/dashboard')
+            } else {
+                toast.error('Veuillez remplir tous les champs')
+            }
         } catch (error: any) {
             console.error(error)
-            toast.error(error.message || 'Failed to login')
+            toast.error('Erreur lors de la connexion')
         } finally {
             setLoading(false)
         }

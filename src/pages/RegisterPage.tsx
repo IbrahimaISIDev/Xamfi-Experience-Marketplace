@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { blink } from '../lib/blink'
+import { useAuth } from '../hooks/useAuth'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react'
 
 export function RegisterPage() {
     const navigate = useNavigate()
+    const { login } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
@@ -19,18 +20,17 @@ export function RegisterPage() {
         e.preventDefault()
         setLoading(true)
         try {
-            await blink.auth.signUp({
-                email,
-                password,
-                metadata: {
-                    displayName: name
-                }
-            })
-            toast.success('Account created successfully')
-            navigate('/dashboard')
+            // Mock registration - just accept any data for testing
+            if (email && password && name) {
+                login()
+                toast.success('Compte créé avec succès !')
+                navigate('/dashboard')
+            } else {
+                toast.error('Veuillez remplir tous les champs')
+            }
         } catch (error: any) {
             console.error(error)
-            toast.error(error.message || 'Failed to create account')
+            toast.error('Erreur lors de la création du compte')
         } finally {
             setLoading(false)
         }
